@@ -421,5 +421,5 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
-CarService/appsettings.json
-CarService/appsettings.Development.json
+CarServices.Api/appsettings.json
+CarServices.Api/appsettings.Development.json
