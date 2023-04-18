@@ -1,4 +1,5 @@
-﻿using CarServices.Api.Core.UnitOfWork.DbContexts;
+﻿using System.ComponentModel;
+using CarServices.Api.Core.UnitOfWork.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarServices.Api.Controllers;
@@ -14,7 +15,8 @@ public class DbController : Controller
         this.context = context;
     }
     
-    [HttpGet]
+    [HttpGet("create")]
+    [Description("Для создания БД из описанных дбСетов. Не миграция")]
     public async Task<IActionResult> Get()
     {
         await context.Database.EnsureDeletedAsync();

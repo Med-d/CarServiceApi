@@ -2,6 +2,7 @@
 using System.Text;
 using CarServices.Api.Models;
 using CarServices.Api.Models.Requests;
+using CarServices.Api.Models.Tokens;
 
 namespace CarServices.Api.Core.AuthServices;
 

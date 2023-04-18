@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Primitives;
 
-namespace CarServices.Api.Models;
+namespace CarServices.Api.Models.Tokens;
 
 public class Token
 {
