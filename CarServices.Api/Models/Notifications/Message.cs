@@ -2,10 +2,9 @@
 
 namespace CarServices.Api.Models.Notifications;
 
-public record CreationOrder(
-    string Title,
-    string CustomerContact,
-    string Description
+public record Message(
+    string SenderName,
+    string Value
 ) : IEvent
 {
     public bool ValidateContent()

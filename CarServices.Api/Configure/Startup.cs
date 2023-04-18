@@ -1,4 +1,5 @@
 ﻿using CarServices.Api.Core.AuthServices;
+using CarServices.Api.Core.NotificationsServices;
 using CarServices.Api.Core.UnitOfWork;
 using CarServices.Api.Core.UnitOfWork.DbContexts;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,9 @@ public static class Startup
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        // Register Services
         services.AddSingleton<CryptoHelper>();
         services.AddScoped<IdentityService>();
+        services.AddScoped<EventBus>();
     }
 }
