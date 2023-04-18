@@ -8,9 +8,6 @@ public interface IUnitOfWork : IDisposable
     IRepository<Notification> NotificationRepository { get; }
     IRepository<NotificationSubscriber> NotificationSubscriberRepository { get; }
     IRepository<User> UserRepository { get; }
-    IRepository<Role> RoleRepository { get; }
-    IRepository<Permission> PermissionRepository { get; }
-    IRepository<RolePermission> RolePermissionsvRepository { get; }
 
     Task<bool> Complete();
 }

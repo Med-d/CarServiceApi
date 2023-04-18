@@ -18,7 +18,10 @@
 
     <ItemGroup>
       <Folder Include="Models\Options" />
-      <Folder Include="Models\Requests" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OperationResult\OperationResult.csproj" />
     </ItemGroup>
 
 </Project>

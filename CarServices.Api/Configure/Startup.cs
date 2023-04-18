@@ -1,4 +1,6 @@
-﻿using CarServices.Api.Core.UnitOfWork.DbContexts;
+﻿using CarServices.Api.Core.AuthServices;
+using CarServices.Api.Core.UnitOfWork;
+using CarServices.Api.Core.UnitOfWork.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarServices.Api.Configure;
@@ -14,5 +16,10 @@ public static class Startup
                 sqlServerOptionsAction: sqlOptions => { sqlOptions.EnableRetryOnFailure(); }
             );
         });
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddSingleton<CryptoHelper>();
+        services.AddScoped<IdentityService>();
     }
 }

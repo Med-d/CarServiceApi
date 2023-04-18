@@ -27,18 +27,6 @@ public class UnitOfWork : IUnitOfWork
     public IRepository<User> UserRepository =>
         userRepositry ??= new Repository<User>(context);
 
-    private IRepository<Role>? roleRepository;
-    public IRepository<Role> RoleRepository =>
-        roleRepository ??= new Repository<Role>(context);
-
-    private IRepository<Permission>? permissionRepository;
-    public IRepository<Permission> PermissionRepository =>
-        permissionRepository ??= new Repository<Permission>(context);
-
-    private IRepository<RolePermission>? rolePermissionRepository;
-    public IRepository<RolePermission> RolePermissionsvRepository =>
-        rolePermissionRepository ??= new Repository<RolePermission>(context);
-
     #endregion
     
     public async Task<bool> Complete() => await context.SaveChangesAsync() > 0;

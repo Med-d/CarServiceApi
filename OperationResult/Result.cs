@@ -1,7 +1,6 @@
 ﻿namespace OperationResult;
 
 public class Result<TResult, TError>
-where TResult : class
 where TError : Exception
 {
     private readonly TResult? result;
@@ -26,7 +25,7 @@ where TError : Exception
     public static Result<TValue, TError> Success<TValue>(TValue result) where TValue : class => new(result);
 
     // Static creating operation result for failure
-    public static Result<TValue, TError> Fail<TValue>(TError error) where TValue : class => new(error);
+    public static Result<TValue, TError> Fail<TValue>(TError error) => new(error);
 
     // Method for checking if operation result is success
     public bool HasResult() => result!= null;
