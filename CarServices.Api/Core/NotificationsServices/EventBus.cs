@@ -1,9 +1,10 @@
-﻿using System.Threading.Channels;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Channels;
 using CarServices.Api.Core.Exceptions;
 using CarServices.Api.Core.UnitOfWork;
 using CarServices.Api.Core.UnitOfWork.Models;
 using CarServices.Api.Models.Notifications;
-using Newtonsoft.Json;
 using OperationResult;
 
 namespace CarServices.Api.Core.NotificationsServices;
@@ -17,12 +18,12 @@ public class EventBus
         this.unitOfWork = unitOfWork;
     }
 
-    public async Task<bool> Publish(string schema, string jsonData, Guid? orderId = null, Guid? parrentMessageId = null)
+    public async Task<Notification> Publish(string channel, string jsonData, int userId, Guid? orderId = null, Guid? parrentMessageId = null)
     {
-        var notificationEvent = NotificationsPool.GetEvents().First(item => item.Schema.Equals(schema));
-        if (JsonConvert.DeserializeObject(jsonData, notificationEvent.EventType) is not IEvent eventData)
+        var notificationEvent = NotificationsPool.GetEvents().First(item => item.Schema.Equals(channel));
+        if (JsonSerializer.Deserialize(jsonData, notificationEvent.EventType) is not IEvent eventData)
             throw new NullReferenceException();
-        if (eventData.ValidateContent())
+        if (!eventData.ValidateContent())
             throw new InvalidDataException();
 
         var notificationRepo = unitOfWork.NotificationRepository;
@@ -31,6 +32,7 @@ public class EventBus
             OrderId = orderId ?? Guid.NewGuid(),
             MessageId = Guid.NewGuid(),
             PastMessageId = parrentMessageId ?? Guid.Empty,
+            UserId = userId,
             Schema = notificationEvent.Schema,
             Data = eventData.GetJson(),
             Created = DateTime.Now
@@ -38,7 +40,8 @@ public class EventBus
         
         notificationRepo.Add(item);
 
-        return await unitOfWork.Complete();
+        await unitOfWork.Complete();
+        return item;
     }
 
     public async Task<bool> Subscribe(int subscriberId, Guid orederId)
@@ -58,19 +61,26 @@ public class EventBus
         return await unitOfWork.Complete();
     }
 
-    public async Task<IEnumerable<Notification>> Listen(int subscriberId)
+    public async Task<IEnumerable<Guid>> ListenSubscribes(int subscriberId)
     {
-        var result = new List<Notification>();
         var subsRepo = unitOfWork.NotificationSubscriberRepository;
-        var notificationsRepo = unitOfWork.NotificationRepository;
         
-        var orders = await subsRepo.GetWhere(item => 
-            !item.isClosed && item.SubscriberId.Equals(subscriberId));
-        foreach (var orderId in orders)
-            result.AddRange(await notificationsRepo.GetWhere(item => item.OrderId.Equals(orderId)));
+        var orders = (await subsRepo.GetWhere(item => 
+            !item.isClosed && item.SubscriberId.Equals(subscriberId))).Select(item => item.OrderId);
 
         await unitOfWork.Complete();
-        return result;
+        return orders;
+    }
+
+    public async Task<IEnumerable<Notification>> MessagesInOrder(Guid orderId)
+    {
+        var notificationRepo = unitOfWork.NotificationRepository;
+
+        var notifications = await notificationRepo.GetWhere(item => item.OrderId.Equals(orderId));
+
+        await unitOfWork.Complete();
+
+        return notifications;
     }
 
     public async Task<bool> Close(Guid orderId)

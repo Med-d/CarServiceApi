@@ -9,7 +9,10 @@ public class Notification
 {
     [Required] public Guid OrderId { get; set; }
     [Required] public Guid MessageId { get; set; }
-    
+
+    public int? UserId { get; set; }
+    public virtual User? User { get; set; }
+
     public Guid? PastMessageId { get; set; }
 
     [Required] public string Schema { get; set; }

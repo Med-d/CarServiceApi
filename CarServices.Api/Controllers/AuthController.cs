@@ -1,7 +1,9 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using CarServices.Api.Core.AuthServices;
+using CarServices.Api.Core.UnitOfWork.Models;
 using CarServices.Api.Models.Requests;
+using CarServices.Api.Models.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +37,14 @@ public class AuthController : Controller
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
-    {   // todo: Регать может только админ
+    {   
+        
+        var tokenReq = Token.FromHeaders(HttpContext.Request.Headers);
+        var identityReq = (await identityService.GetIdentity(tokenReq)).ValueOrThrow();
+
+        if (identityReq.Role < Role.Admin)
+            return Forbid();
+
         var token = cryptoHelper.GetToken(request.Login, request.Password);
         var isRegisterd = await identityService.RegisterIdentity(
             request.Name,

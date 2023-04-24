@@ -1,11 +1,13 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace CarServices.Api.Models.Notifications;
 
-public record CreationOrder(
+public record CloseOrder(
     string Title,
-    string CustomerContact,
-    string Description
+    string? Description,
+    Guid ParrentMessageId,
+    Guid OrderId
 ) : IEvent
 {
     public bool ValidateContent()

@@ -10,8 +10,8 @@ public class NotificationSubscriber
     [Required] public Guid OrderId { get; set; }
     public virtual Notification Notification { get; set; }
 
-    [Required] public int SubscriberId { get; set; }
-    public virtual User User { get; set; }
+    public int? SubscriberId { get; set; }
+    public virtual User? User { get; set; }
 
     public bool isClosed { get; set; }
 }

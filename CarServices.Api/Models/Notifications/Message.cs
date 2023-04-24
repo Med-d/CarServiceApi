@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 
 namespace CarServices.Api.Models.Notifications;
 
@@ -12,5 +12,5 @@ public record Message(
         return true;
     }
 
-    public string GetJson() => JsonConvert.SerializeObject(this);
+    public string GetJson() => JsonSerializer.Serialize(this);
 }

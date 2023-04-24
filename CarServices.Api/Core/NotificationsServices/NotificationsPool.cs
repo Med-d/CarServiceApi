@@ -25,4 +25,5 @@ public static class NotificationsPool
 
     public static readonly NotificationEvent CreationOrder = new("create-order", typeof(CreationOrder));
     public static readonly NotificationEvent Message = new("message", typeof(Message));
+    public static readonly NotificationEvent CloseOrder = new("close-order", typeof(CloseOrder));
 }
